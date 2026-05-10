@@ -1,18 +1,14 @@
 :root {
-    --primary: #ff7eb3; /* Soft Romantic Pink */
-    --secondary: #ff4757; /* Deeper Heart Red */
-    --accent: #ffccd5; /* Light Pastel Pink */
+    --primary: #ff7eb3;
+    --secondary: #ff4757;
+    --accent: #ffccd5;
     --text: #4a4a4a;
-    --bg: #fff5f7; /* Very Light Pink Background */
+    --bg: #fff5f7;
     --white: #ffffff;
     --shadow: 0 10px 30px rgba(255, 126, 179, 0.15);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
@@ -21,245 +17,159 @@ body {
     line-height: 1.8;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
 /* Header */
 header {
     background-color: var(--white);
-    padding: 40px 0;
-    border-bottom: 3px solid var(--accent);
+    padding: 30px 0;
     text-align: center;
     border-radius: 0 0 50px 50px;
     box-shadow: var(--shadow);
+    border-bottom: 3px solid var(--accent);
 }
 
-header h1 {
-    color: var(--secondary);
-    font-size: 32px;
-    margin-bottom: 15px;
-}
+header h1 span { display: inline-block; animation: heartbeat 1.5s infinite; }
+@keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
-header h1 span {
-    display: inline-block;
-    animation: heartbeat 1.5s infinite;
-}
+nav ul { list-style: none; display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+nav ul li a { text-decoration: none; color: var(--primary); font-size: 14px; font-weight: 500; }
 
-@keyframes heartbeat {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: var(--primary);
-    font-size: 15px;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-nav ul li a:hover {
-    color: var(--secondary);
-}
-
-/* Main Content */
-main {
-    padding: 40px 0;
-}
-
+/* Main Tool */
+main { padding: 40px 0; }
 .card {
     background: var(--white);
     padding: 40px;
-    border-radius: 25px;
+    border-radius: 30px;
     box-shadow: var(--shadow);
     margin-bottom: 40px;
     border: 2px solid var(--accent);
 }
 
-.main-tool {
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.person-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    font-family: inherit;
+    outline: none;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.main-tool::before {
-    content: '❤';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    font-size: 100px;
-    color: var(--accent);
-    opacity: 0.3;
-    z-index: 0;
-}
-
-.main-tool * {
-    position: relative;
-    z-index: 1;
-}
-
-.tool-desc {
-    color: #888;
-    margin-bottom: 30px;
-    font-size: 16px;
-}
-
-.input-group {
+/* Photo Upload */
+.photo-upload {
+    width: 120px;
+    height: 120px;
+    background: var(--bg);
+    border: 2px dashed var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 35px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s;
 }
 
-.input-field {
-    flex: 1;
-}
-
-.input-field label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: var(--primary);
-    font-size: 15px;
-}
-
-input[type="text"] {
+.photo-upload:hover { background: var(--accent); }
+.photo-upload span { font-size: 12px; color: var(--primary); text-align: center; padding: 5px; }
+.file-input {
+    position: absolute;
     width: 100%;
-    padding: 15px;
-    border: 2px solid var(--accent);
-    border-radius: 15px;
-    font-size: 16px;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.3s;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
-input[type="text"]:focus {
-    border-color: var(--primary);
+.photo-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vs-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
 }
 
 .vs {
+    font-size: 30px;
     font-weight: 900;
     color: var(--secondary);
-    font-size: 28px;
-    margin-top: 25px;
     text-shadow: 2px 2px 0 var(--accent);
 }
 
 button {
+    width: 100%;
+    max-width: 400px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
     border: none;
-    padding: 18px 50px;
+    padding: 18px;
     border-radius: 40px;
     font-size: 20px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
     box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
-}
-
-button:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+    margin-top: 20px;
 }
 
 /* Result Area */
-#resultArea {
-    margin-top: 50px;
-    padding-top: 40px;
-    border-top: 2px dashed var(--accent);
+#resultArea { margin-top: 50px; text-align: center; }
+.result-photos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
 }
 
-.result-score {
-    font-size: 80px;
-    font-weight: 900;
-    color: var(--secondary);
-    margin-bottom: 15px;
+.res-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--primary);
+    background: var(--accent);
+    overflow: hidden;
 }
 
-.result-text {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text);
-    padding: 0 20px;
-}
-
-.hidden {
-    display: none;
-}
+.res-vs { font-size: 30px; animation: heartbeat 1s infinite; }
+.result-score { font-size: 80px; font-weight: 900; color: var(--secondary); }
 
 /* Content Sections */
-.content-section {
-    margin-top: 60px;
-}
+.content-section h3 { color: var(--secondary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.content-section h3::before { content: '💖'; }
 
-.content-section h3 {
-    margin-bottom: 25px;
-    font-size: 24px;
-    color: var(--secondary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+footer { padding: 40px 0; text-align: center; border-top: 2px solid var(--accent); background: white; }
 
-.content-section h3::before {
-    content: '💖';
-}
-
-.content-section p {
-    margin-bottom: 15px;
-}
-
-.content-section ul, .content-section ol {
-    padding-left: 20px;
-    margin-top: 20px;
-}
-
-.content-section li {
-    margin-bottom: 12px;
-}
-
-/* Footer */
-footer {
-    background: var(--white);
-    padding: 50px 0;
-    text-align: center;
-    border-top: 2px solid var(--accent);
-}
-
-.footer-links {
-    margin-top: 20px;
-}
-
-.footer-links a {
-    color: var(--primary);
-    text-decoration: none;
-    font-size: 14px;
-    margin: 0 15px;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .input-group {
-        flex-direction: column;
-    }
-    .vs {
-        margin: 10px 0;
-    }
-    header h1 {
-        font-size: 24px;
-    }
+@media (max-width: 768px) {
+    .input-container { flex-direction: column; align-items: center; }
+    .vs-container { margin: 20px 0; }
 }
