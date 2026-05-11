@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // 사진 업데이트를 클릭 직후에 미리 시작 (백그라운드 처리)
+        updateResultPhotos();
+
         analyzeBtn.disabled = true;
         resultArea.classList.add('hidden');
 
@@ -54,14 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
             analyzeBtn.innerText = loadingTexts[textIndex];
         }, 300);
 
-        // 전체 대기 시간을 1초(1000ms)로 단축
+        // 전체 대기 시간을 1초(1000ms)로 유지 (사진 유무와 상관없이 동일)
         setTimeout(() => {
-            clearInterval(textInterval); // 텍스트 로테이션 중지
+            clearInterval(textInterval);
             
-            // 결과 영역에 사진 업데이트 (있을 경우)
-            updateResultPhotos();
-            
-            // 알고리즘: 이름 획수 + 생일 차이 시뮬레이션
+            // 알고리즘 계산 및 결과 표시
             const score = calculateComplexCompatibility(name1, birth1, name2, birth2);
             displayResult(score, name1, name2);
             
