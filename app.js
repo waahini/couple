@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreDisplay = document.getElementById('score');
     const resultText = document.getElementById('resultText');
 
+    // 로딩 중 표시할 텍스트 배열
+    const loadingTexts = [
+        '✨ 성명학적 기운을 분석하는 중...',
+        '🔮 생년월일의 조화를 살피는 중...',
+        '💖 두 분의 인연을 연결하는 중...',
+        '📊 최종 분석 결과를 도출하는 중...'
+    ];
+
     // 사진 미리보기 처리
     setupPhotoPreview('photo1', 'photo1-preview');
     setupPhotoPreview('photo2', 'photo2-preview');
@@ -36,10 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         analyzeBtn.disabled = true;
-        analyzeBtn.innerText = '✨ 두 분의 운명을 분석하고 있습니다...';
         resultArea.classList.add('hidden');
 
+        // 로딩 텍스트 로테이션 (300ms 주기)
+        let textIndex = 0;
+        analyzeBtn.innerText = loadingTexts[textIndex];
+        const textInterval = setInterval(() => {
+            textIndex = (textIndex + 1) % loadingTexts.length;
+            analyzeBtn.innerText = loadingTexts[textIndex];
+        }, 300);
+
+        // 전체 대기 시간을 1초(1000ms)로 단축
         setTimeout(() => {
+            clearInterval(textInterval); // 텍스트 로테이션 중지
+            
             // 결과 영역에 사진 업데이트 (있을 경우)
             updateResultPhotos();
             
@@ -49,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             analyzeBtn.disabled = false;
             analyzeBtn.innerText = '💕 궁합 분석 시작하기';
-        }, 2000);
+        }, 1000);
     });
 
     function updateResultPhotos() {
@@ -93,11 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResult(score, name1, name2) {
         resultArea.classList.remove('hidden');
         let current = 0;
+        // 점수 카운팅 속도도 조금 더 빠르게 조정 (15ms)
         const timer = setInterval(() => {
-            if (current >= score) clearInterval(timer);
+            if (current >= score) {
+                clearInterval(timer);
+                scoreDisplay.innerText = score;
+                return;
+            }
             scoreDisplay.innerText = current;
             current++;
-        }, 20);
+        }, 15);
 
         let message = '';
         if (score >= 95) {
