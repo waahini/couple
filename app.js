@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreDisplay = document.getElementById('score');
     const resultText = document.getElementById('resultText');
 
+    if (!analyzeBtn) {
+        console.error('분석 버튼(analyzeBtn)을 찾을 수 없습니다.');
+        return;
+    }
+
     // 로딩 중 표시할 텍스트 배열
     const loadingTexts = [
         '✨ 성명학적 기운을 분석하는 중...',
@@ -19,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupPhotoPreview(inputId, previewId) {
         const input = document.getElementById(inputId);
         const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
 
         input.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -32,22 +38,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    analyzeBtn.addEventListener('click', () => {
-        const name1 = document.getElementById('name1').value.trim();
-        const birth1 = document.getElementById('birth1').value;
-        const name2 = document.getElementById('name2').value.trim();
-        const birth2 = document.getElementById('birth2').value;
+    analyzeBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // 클릭 이벤트 중복 방지
+
+        const name1 = document.getElementById('name1')?.value.trim();
+        const birth1 = document.getElementById('birth1')?.value;
+        const name2 = document.getElementById('name2')?.value.trim();
+        const birth2 = document.getElementById('birth2')?.value;
 
         if (!name1 || !name2 || !birth1 || !birth2) {
             alert('두 사람의 이름과 생년월일을 모두 입력해주세요! 사진은 선택사항입니다. 💕');
             return;
         }
 
+        // 분석 버튼 중복 클릭 방지
+        analyzeBtn.disabled = true;
+        if (resultArea) resultArea.classList.add('hidden');
+
         // 사진 업데이트를 클릭 직후에 미리 시작 (백그라운드 처리)
         updateResultPhotos();
-
-        analyzeBtn.disabled = true;
-        resultArea.classList.add('hidden');
 
         // 로딩 텍스트 로테이션 (300ms 주기)
         let textIndex = 0;
@@ -61,10 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             clearInterval(textInterval);
             
-            // 알고리즘 계산 및 결과 표시
+            // 알고리즘 계산
             const score = calculateComplexCompatibility(name1, birth1, name2, birth2);
+            
+            // 결과 표시
             displayResult(score, name1, name2);
             
+            // 버튼 복구
             analyzeBtn.disabled = false;
             analyzeBtn.innerText = '💕 궁합 분석 시작하기';
         }, 1000);
@@ -74,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ['photo1', 'photo2'].forEach((id, index) => {
             const input = document.getElementById(id);
             const resPhoto = document.getElementById(`res-photo${index + 1}`);
-            if (input.files && input.files[0]) {
+            if (!resPhoto) return;
+
+            if (input && input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     resPhoto.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -87,31 +101,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateComplexCompatibility(n1, b1, n2, b2) {
-        // 이름 해시 + 날짜 차이를 이용한 결정론적 점수
         let combined = n1 + b1 + n2 + b2;
         let hash = 0;
         for (let i = 0; i < combined.length; i++) {
             hash += combined.charCodeAt(i);
         }
         
-        // 생일 날짜 차이 반영 (가상의 기운 조화)
         const date1 = new Date(b1);
         const date2 = new Date(b2);
-        const diffDays = Math.abs(date1 - date2) / (1000 * 60 * 60 * 24);
         
-        let score = (hash % 41) + 60; // 기본 60~100점
+        let score = (hash % 41) + 60; 
         
-        // 사진 등록 여부에 따른 보너스 (가상)
-        if (document.getElementById('photo1').files.length > 0) score += 2;
-        if (document.getElementById('photo2').files.length > 0) score += 2;
+        const p1 = document.getElementById('photo1');
+        const p2 = document.getElementById('photo2');
+        if (p1 && p1.files.length > 0) score += 2;
+        if (p2 && p2.files.length > 0) score += 2;
         
         return Math.min(100, score);
     }
 
     function displayResult(score, name1, name2) {
+        if (!resultArea || !scoreDisplay || !resultText) return;
+
         resultArea.classList.remove('hidden');
         let current = 0;
-        // 점수 카운팅 속도도 조금 더 빠르게 조정 (15ms)
+        
         const timer = setInterval(() => {
             if (current >= score) {
                 clearInterval(timer);
